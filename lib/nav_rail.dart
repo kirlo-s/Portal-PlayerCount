@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:portal_playercount/pages/analytics.dart';
-import 'package:portal_playercount/pages/home.dart';
-import 'package:portal_playercount/pages/log.dart';
+import 'package:provider/provider.dart';
+
+class NavIndexProvider extends ChangeNotifier {
+  int _index = 0;
+
+  int get index => _index;
+  set index(int index) {
+    _index = index;
+    notifyListeners();
+  }
+}
 
 class NavRail extends StatefulWidget {
   _NavRailState createState() => _NavRailState();
@@ -17,15 +25,9 @@ class _NavRailState extends State<NavRail> {
     _selectedIndex = 0;
   }
 
-/*
-  static const List<Widget> _widgetOptions = <Widget>[
-    HomePage(),
-    LogPage(),
-    AnalyticsPage(),
-  ];
-*/
   @override
   Widget build(BuildContext context) {
+    NavIndexProvider navIndexProvider = context.watch<NavIndexProvider>();
     return NavigationRail(
         elevation: 5,
         extended: true,
@@ -36,6 +38,7 @@ class _NavRailState extends State<NavRail> {
           setState(() {
             _selectedIndex = index;
           });
+          navIndexProvider.index = index;
         });
   }
 

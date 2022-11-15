@@ -1,8 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:portal_playercount/nav_rail.dart';
+import 'package:portal_playercount/pages/analytics.dart';
+import 'package:portal_playercount/pages/home.dart';
+import 'package:portal_playercount/pages/log.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<NavIndexProvider>(
+          create: (context) => NavIndexProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        home: MyApp(),
+      ),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -70,7 +85,29 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Row(children: <Widget>[
         NavRail(),
+        MainField(),
       ]),
     );
   }
+}
+
+class MainField extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    NavIndexProvider navIndexProvider = context.watch<NavIndexProvider>();
+    return Container(
+      child: pages(navIndexProvider.index),
+    );
+  }
+}
+
+Widget pages(int index) {
+  if (index == 0) {
+    return HomePage();
+  } else if (index == 1) {
+    return LogPage();
+  } else if (index == 2) {
+    return AnalyticsPage();
+  }
+  return Text("null returned");
 }
