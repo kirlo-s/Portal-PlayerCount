@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portal_playercount/get_data.dart';
 import 'package:portal_playercount/nav_rail.dart';
 import 'package:portal_playercount/pages/analytics.dart';
 import 'package:portal_playercount/pages/home.dart';
@@ -11,6 +12,12 @@ void main() {
       providers: [
         ChangeNotifierProvider<NavIndexProvider>(
           create: (context) => NavIndexProvider(),
+        ),
+        ChangeNotifierProvider<HomePageProvider>(
+          create: (context) => HomePageProvider(),
+        ),
+        ChangeNotifierProvider<GameDataProvider>(
+          create: (context) => GameDataProvider(),
         ),
       ],
       child: MaterialApp(
