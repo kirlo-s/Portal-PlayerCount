@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:portal_playercount/get_data.dart';
 import 'package:portal_playercount/pages/home.dart';
@@ -10,14 +12,20 @@ class Watchdog extends StatelessWidget {
   Widget build(BuildContext context) {
     var _screenSize = MediaQuery.of(context).size;
     GameDataProvider gameDataProvider = context.watch<GameDataProvider>();
+    GameDataErrorProvider gameDataErrorProvider =
+        context.watch<GameDataErrorProvider>();
     dynamic gamedata = gameDataProvider.gameData;
     int _playercount = 0;
 
-    try {
+    if (gamedata == null) {
+      return ErrorPage(context);
+    } else {
       dynamic team1 = gamedata["teams"][0];
       dynamic team2 = gamedata["teams"][1];
       _playercount = gamedata["teams"][0]["players"].length +
           gamedata["teams"][1]["players"].length;
+      DateTime _time_d = gameDataProvider.time;
+      String _time = DateFormat("yyyy-MM-dd(E) hh:mm").format(_time_d);
       return Expanded(
         child: Column(children: [
           Card(
@@ -87,17 +95,39 @@ class Watchdog extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Row(
-              children: <Widget>[
-                PlayerList(context, team1),
-                PlayerList(context, team2),
-              ],
+            child: Card(
+              child: Column(
+                children: [
+                  Row(
+                    children: [
+                      TeamCard(team1),
+                      TeamCard(team2),
+                    ],
+                  ),
+                  Expanded(
+                    child: Row(
+                      children: <Widget>[
+                        PlayerList(context, team1),
+                        PlayerList(context, team2),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
+          Container(
+            width: _screenSize.width,
+            child: Padding(
+                padding: EdgeInsets.only(left: 10, right: 10),
+                child: Text(
+                  "Last Update:$_time",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                  textAlign: TextAlign.right,
+                )),
+          )
         ]),
       );
-    } catch (e) {
-      return ErrorPage(context);
     }
   }
 }
@@ -105,14 +135,17 @@ class Watchdog extends StatelessWidget {
 Widget ErrorPage(BuildContext context) {
   GameDataProvider gameDataProvider = context.watch<GameDataProvider>();
   HomePageProvider homePageProvider = context.watch<HomePageProvider>();
+  GameDataErrorProvider gameDataErrorProvider =
+      context.watch<GameDataErrorProvider>();
+  int _status = gameDataErrorProvider.error;
   return Expanded(
       child: Center(
     child: Column(mainAxisSize: MainAxisSize.min, children: [
-      Text("Error:Cannot get the server data!"),
+      const Text("Error:Cannot get the server data!"),
+      ErrorText(_status),
       Padding(
         padding: EdgeInsets.all(10),
         child: ElevatedButton(
-          child: const Text('Return'),
           style: ElevatedButton.styleFrom(
             primary: Colors.blue,
             onPrimary: Colors.white,
@@ -121,15 +154,31 @@ Widget ErrorPage(BuildContext context) {
           onPressed: () {
             homePageProvider.serverId = "";
           },
+          child: const Text('Return'),
         ),
       ),
     ]),
   ));
 }
 
+Widget ErrorText(int status) {
+  if (status == 201) {
+    return const Text("Error 201:API error");
+  } else if (status == 404) {
+    return const Text("Error 404: Server not found");
+  } else if (status == 422) {
+    return const Text("Error 422: Validation error");
+  } else {
+    return const Text("Unknown error");
+  }
+}
+
 Widget PlayerList(BuildContext context, dynamic team) {
   return Expanded(
       child: Card(
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(2),
+    ),
     child: team["players"].length > 0
         ? ListView.builder(
             itemCount: team["players"].length,
@@ -157,6 +206,26 @@ Widget PlayerCard(dynamic playerdata) {
             children: [
               Expanded(child: Text(playerdata["name"])),
               Text("$dif min")
+            ],
+          )));
+}
+
+Widget TeamCard(team) {
+  return Expanded(
+      child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(0),
+          ),
+          child: Row(
+            children: [
+              Expanded(
+                  child: Text(team["shortName"],
+                      style: TextStyle(fontWeight: FontWeight.bold))),
+              Image.network(
+                team["image"],
+                width: 16 * 2,
+                height: 9 * 2,
+              ),
             ],
           )));
 }

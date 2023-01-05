@@ -5,6 +5,8 @@ import 'package:portal_playercount/pages/analytics.dart';
 import 'package:portal_playercount/pages/home.dart';
 import 'package:portal_playercount/pages/log.dart';
 import 'package:provider/provider.dart';
+import 'package:bitsdojo_window/bitsdojo_window.dart';
+import 'package:system_tray/system_tray.dart';
 
 void main() {
   runApp(
@@ -19,12 +21,22 @@ void main() {
         ChangeNotifierProvider<GameDataProvider>(
           create: (context) => GameDataProvider(),
         ),
+        ChangeNotifierProvider<GameDataErrorProvider>(
+          create: (context) => GameDataErrorProvider(),
+        ),
       ],
       child: MaterialApp(
         home: MyApp(),
       ),
     ),
   );
+  doWhenWindowReady(() {
+    final initialSize = Size(1200, 675);
+    appWindow.minSize = initialSize;
+    appWindow.size = initialSize;
+    appWindow.alignment = Alignment.center;
+    appWindow.show();
+  });
 }
 
 class MyApp extends StatelessWidget {
