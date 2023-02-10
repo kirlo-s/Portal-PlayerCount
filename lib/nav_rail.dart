@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:portal_playercount/get_data.dart';
 import 'package:provider/provider.dart';
 
 class NavIndexProvider extends ChangeNotifier {
@@ -27,6 +28,8 @@ class _NavRailState extends State<NavRail> {
 
   @override
   Widget build(BuildContext context) {
+    TimerStoreProvider timerStoreProvider = context.read<TimerStoreProvider>();
+    timerStoreProvider.initTimer(context);
     NavIndexProvider navIndexProvider = context.watch<NavIndexProvider>();
     return NavigationRail(
         elevation: 5,

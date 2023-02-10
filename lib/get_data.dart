@@ -49,3 +49,23 @@ Future<void> getServerData(String serverName, BuildContext context) async {
     gameDataProvider.gameData = json;
   }
 }
+
+class TimerStoreProvider with ChangeNotifier {
+  String serverName = '';
+  late BuildContext context;
+  late Timer _timer;
+  initTimer(BuildContext context) {
+    this.context = context;
+  }
+
+  startTimer(String serverName) {
+    this.serverName = serverName;
+    _timer = Timer.periodic(const Duration(minutes: 1), (timer) {
+      updateCounter();
+    });
+  }
+
+  void updateCounter() {
+    getServerData(serverName, context);
+  }
+}

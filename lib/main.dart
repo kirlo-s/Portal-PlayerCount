@@ -24,6 +24,9 @@ void main() {
         ChangeNotifierProvider<GameDataErrorProvider>(
           create: (context) => GameDataErrorProvider(),
         ),
+        ChangeNotifierProvider<TimerStoreProvider>(
+          create: (context) => TimerStoreProvider(),
+        ),
       ],
       child: MaterialApp(
         home: MyApp(),

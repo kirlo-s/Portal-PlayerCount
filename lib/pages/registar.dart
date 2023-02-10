@@ -28,6 +28,7 @@ class _RegistarState extends State<Registar> {
   @override
   Widget build(BuildContext context) {
     HomePageProvider homePageProvider = context.watch<HomePageProvider>();
+    TimerStoreProvider timerStoreProvider = context.read<TimerStoreProvider>();
     final BuildContext context2 = context;
     return Expanded(
       child: Scaffold(
@@ -64,6 +65,7 @@ class _RegistarState extends State<Registar> {
                         await getServerData(serverName, context);
                         Navigator.of(context, rootNavigator: true).pop();
                         homePageProvider.serverId = serverName;
+                        timerStoreProvider.startTimer(serverName);
                       },
               ),
             ),
