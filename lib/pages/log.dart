@@ -7,12 +7,14 @@ class LogPage extends StatefulWidget {
 
 class _LogPageState extends State<LogPage> {
   bool isSet = false;
+  String _time = '';
+  int _sec = 0;
 
   @override
   Widget build(BuildContext context) {
     return Expanded(
         child: Center(
-      child: Text('Log'),
+      child: Text("Log"),
     ));
   }
 }

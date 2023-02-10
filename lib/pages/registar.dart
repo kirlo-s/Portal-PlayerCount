@@ -28,7 +28,7 @@ class _RegistarState extends State<Registar> {
   @override
   Widget build(BuildContext context) {
     HomePageProvider homePageProvider = context.watch<HomePageProvider>();
-
+    final BuildContext context2 = context;
     return Expanded(
       child: Scaffold(
         body: Center(
