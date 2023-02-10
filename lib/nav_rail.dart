@@ -52,10 +52,6 @@ class _NavRailState extends State<NavRail> {
         label: Text('Home'),
       ),
       const NavigationRailDestination(
-        icon: Icon(Icons.notes),
-        label: Text('Log'),
-      ),
-      const NavigationRailDestination(
         icon: Icon(Icons.analytics),
         label: Text('Statistics'),
       ),

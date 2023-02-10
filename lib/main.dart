@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:portal_playercount/get_data.dart';
 import 'package:portal_playercount/nav_rail.dart';
-import 'package:portal_playercount/pages/analytics.dart';
+import 'package:portal_playercount/pages/statistics.dart';
 import 'package:portal_playercount/pages/home.dart';
-import 'package:portal_playercount/pages/log.dart';
 import 'package:provider/provider.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
 import 'package:system_tray/system_tray.dart';
@@ -26,6 +25,9 @@ void main() {
         ),
         ChangeNotifierProvider<TimerStoreProvider>(
           create: (context) => TimerStoreProvider(),
+        ),
+        ChangeNotifierProvider<StatisticsProvider>(
+          create: (context) => StatisticsProvider(),
         ),
       ],
       child: MaterialApp(
@@ -127,9 +129,7 @@ Widget pages(int index) {
   if (index == 0) {
     return HomePage();
   } else if (index == 1) {
-    return LogPage();
-  } else if (index == 2) {
-    return AnalyticsPage();
+    return StatisticsPage();
   }
   return Text("null returned");
 }

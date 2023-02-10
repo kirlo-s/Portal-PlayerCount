@@ -29,6 +29,7 @@ class _RegistarState extends State<Registar> {
   Widget build(BuildContext context) {
     HomePageProvider homePageProvider = context.watch<HomePageProvider>();
     TimerStoreProvider timerStoreProvider = context.read<TimerStoreProvider>();
+    StatisticsProvider statisticsProvider = context.read<StatisticsProvider>();
     final BuildContext context2 = context;
     return Expanded(
       child: Scaffold(
@@ -66,6 +67,7 @@ class _RegistarState extends State<Registar> {
                         Navigator.of(context, rootNavigator: true).pop();
                         homePageProvider.serverId = serverName;
                         timerStoreProvider.startTimer(serverName);
+                        statisticsProvider.startTime = DateTime.now();
                       },
               ),
             ),
