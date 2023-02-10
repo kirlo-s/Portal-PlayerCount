@@ -57,7 +57,7 @@ class _NavRailState extends State<NavRail> {
       ),
       const NavigationRailDestination(
         icon: Icon(Icons.analytics),
-        label: Text('Analytics'),
+        label: Text('Statistics'),
       ),
     ];
   }

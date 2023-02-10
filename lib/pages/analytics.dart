@@ -12,7 +12,7 @@ class _AnalyticsPageState extends State<AnalyticsPage> {
   Widget build(BuildContext context) {
     return Expanded(
         child: Center(
-      child: Text('Analytics'),
+      child: Text('Statistics'),
     ));
   }
 }
