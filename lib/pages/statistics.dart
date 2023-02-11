@@ -47,7 +47,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
     String countPlayer = statisticsProvider.countJoined.toString();
     String serverName = statisticsProvider.serverName;
     int all = 0;
-    List<int> playedMinList = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+    List<int> playedMinList = statisticsProvider.playedMinList;
     /*  statisticsProvider.playedMinList */
     for (var i in playedMinList) {
       all += i;
