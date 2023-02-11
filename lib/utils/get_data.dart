@@ -84,6 +84,8 @@ Future<void> updateStatistics(BuildContext context) async {
   dynamic team2 = gamedata["teams"][1]["players"];
   dynamic team = team1 + team2;
   DateTime now = DateTime.now();
+  String serverName = gamedata["serverinfo"]["name"];
+  statisticsProvider.serverName = serverName;
   for (var p in team) {
     String name = p["name"];
     DateTime joined = DateTime.fromMicrosecondsSinceEpoch(p["join_time"]);
@@ -93,14 +95,19 @@ Future<void> updateStatistics(BuildContext context) async {
   Map<String, int> prev = statisticsProvider.players;
 
   /*if you add new stat, add here*/
+  int count = 0;
+  playerlist.forEach((key, value) {
+    if (prev.containsKey(key) == false) {
+      count++;
+    }
+  });
+  statisticsProvider.addCountJoined = count;
   prev.forEach((key, value) {
     if (playerlist.containsKey(key) == false) {
-      int index = (value ~/ 15) > 10 ? 10 : (value ~/ 15);
-      print("$value:$index");
+      int index = (value ~/ 15) >= 10 ? 9 : (value ~/ 15);
       statisticsProvider.playedMin(index);
     }
   });
-
   statisticsProvider.players = playerlist;
 }
 
@@ -108,6 +115,8 @@ class StatisticsProvider extends ChangeNotifier {
   DateTime _startTime = DateTime(0, 0, 0, 0, 0);
   Map<String, int> _players = {};
   List<int> list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+  int _countJoined = 0;
+  String _serverName = "";
 
   set players(Map<String, int> players) {
     _players = players;
@@ -122,7 +131,17 @@ class StatisticsProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  set addCountJoined(int newplayers) {
+    _countJoined += newplayers;
+  }
+
+  set serverName(String serverName) {
+    _serverName = serverName;
+  }
+
   List<int> get playedMinList => list;
   Map<String, int> get players => _players;
   DateTime get startTime => _startTime;
+  int get countJoined => _countJoined;
+  String get serverName => _serverName;
 }

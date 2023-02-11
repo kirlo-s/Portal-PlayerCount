@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:portal_playercount/pages/registar.dart';
 import 'package:portal_playercount/pages/watchdog.dart';
 import 'package:provider/provider.dart';
-import 'package:portal_playercount/get_data.dart';
+import 'package:portal_playercount/utils/get_data.dart';
 
 class HomePageProvider extends ChangeNotifier {
   String _serverId = "";

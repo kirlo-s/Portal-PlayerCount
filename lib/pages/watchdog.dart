@@ -1,7 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
-import 'package:portal_playercount/get_data.dart';
+import 'package:portal_playercount/utils/get_data.dart';
 import 'package:portal_playercount/pages/home.dart';
 import 'package:portal_playercount/pages/registar.dart';
 import "package:provider/provider.dart";
@@ -32,7 +30,7 @@ class Watchdog extends StatelessWidget {
             child: Column(
               children: [
                 Padding(
-                  padding: EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(10),
                   child: Align(
                     alignment: Alignment.topLeft,
                     child: Text(
@@ -59,13 +57,13 @@ class Watchdog extends StatelessWidget {
                             Text("Map:" + gamedata["serverinfo"]["currentMap"],
                                 style: const TextStyle(fontSize: 25)),
                             Column(mainAxisSize: MainAxisSize.min, children: [
-                              Text(
+                              const Text(
                                 "PlayerAmount:",
                                 textAlign: TextAlign.start,
                               ),
                               Text(
                                 "$_playercount",
-                                style: TextStyle(
+                                style: const TextStyle(
                                     fontSize: 30, color: Colors.green),
                               )
                             ]),

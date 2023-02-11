@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:portal_playercount/pages/home.dart';
 import "package:provider/provider.dart";
-import "package:portal_playercount/get_data.dart";
+import 'package:portal_playercount/utils/get_data.dart';
 
 class Registar extends StatefulWidget {
   _RegistarState createState() => _RegistarState();
