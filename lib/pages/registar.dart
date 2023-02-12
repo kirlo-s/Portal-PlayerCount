@@ -68,6 +68,7 @@ class _RegistarState extends State<Registar> {
                         homePageProvider.serverId = serverName;
                         timerStoreProvider.startTimer(serverName);
                         statisticsProvider.startTime = DateTime.now();
+                        statisticsProvider.graphTime = DateTime.now();
                       },
               ),
             ),

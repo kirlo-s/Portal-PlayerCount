@@ -74,51 +74,89 @@ class TimerStoreProvider with ChangeNotifier {
 }
 
 Future<void> updateStatistics(BuildContext context) async {
+  DateTime now = DateTime.now();
   GameDataProvider gameDataProvider = context.read<GameDataProvider>();
   StatisticsProvider statisticsProvider = context.read<StatisticsProvider>();
 
-  Map<String, int> playerlist = {};
+  Map<String, int> playerMinutesList = {};
+  Map<String, String> playerPlatformList = {};
 
   dynamic gamedata = gameDataProvider.gameData;
   dynamic team1 = gamedata["teams"][0]["players"];
   dynamic team2 = gamedata["teams"][1]["players"];
   dynamic team = team1 + team2;
-  DateTime now = DateTime.now();
   String serverName = gamedata["serverinfo"]["name"];
   statisticsProvider.serverName = serverName;
   for (var p in team) {
     String name = p["name"];
     DateTime joined = DateTime.fromMicrosecondsSinceEpoch(p["join_time"]);
     int dif = now.difference(joined).inMinutes;
-    playerlist[name] = dif;
+    String platform = p["platform"];
+    playerMinutesList[name] = dif;
+    playerPlatformList[name] = platform;
   }
-  Map<String, int> prev = statisticsProvider.players;
+  Map<String, int> prevMin = statisticsProvider.playersMin;
+  Map<String, String> prevPl = statisticsProvider.playersPl;
 
   /*if you add new stat, add here*/
   int count = 0;
-  playerlist.forEach((key, value) {
-    if (prev.containsKey(key) == false) {
+  playerMinutesList.forEach((key, value) {
+    if (prevMin.containsKey(key) == false) {
       count++;
+      if (playerPlatformList[key] == "pc") {
+        statisticsProvider.platform(0);
+      } else if (playerPlatformList[key] == "psn") {
+        statisticsProvider.platform(1);
+      } else if (playerPlatformList[key] == "xbox") {
+        statisticsProvider.platform(2);
+      }
     }
   });
+  DateTime baseTime = statisticsProvider.graphTime;
+  if (now.difference(baseTime).inMinutes < 20) {
+    statisticsProvider.addTimeData(baseTime, count);
+    print(
+        "${now.difference(baseTime).inMinutes},${statisticsProvider.graphTime}");
+  } else {
+    statisticsProvider.addTimeData(now, count);
+    statisticsProvider.graphTime = now;
+    print(
+        "else:${now.difference(baseTime).inMinutes},${statisticsProvider.graphTime}");
+  }
   statisticsProvider.addCountJoined = count;
-  prev.forEach((key, value) {
-    if (playerlist.containsKey(key) == false) {
+  prevMin.forEach((key, value) {
+    if (playerMinutesList.containsKey(key) == false) {
       int index = (value ~/ 15) >= 10 ? 9 : (value ~/ 15);
       statisticsProvider.playedMin(index);
     }
   });
-  statisticsProvider.players = playerlist;
+  statisticsProvider.playersMin = playerMinutesList;
 }
 
 class StatisticsProvider extends ChangeNotifier {
   DateTime _startTime = DateTime(0, 0, 0, 0, 0);
+  DateTime _graphTime = DateTime(0, 0, 0, 0, 0);
   Map<String, int> _players = {};
+  Map<String, String> _playersPl = {};
   List<int> list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
   int _countJoined = 0;
   String _serverName = "";
+  List<int> _platform = [0, 0, 0];
+  Map<DateTime, int> _timeData = {};
 
-  set players(Map<String, int> players) {
+  set graphTime(DateTime graphTime) {
+    _graphTime = graphTime;
+  }
+
+  void addTimeData(DateTime time, int count) {
+    _timeData[time] = (_timeData[time] == null ? 0 : _timeData[time]!) + count;
+  }
+
+  set playersPl(Map<String, String> playersPl) {
+    _playersPl = playersPl;
+  }
+
+  set playersMin(Map<String, int> players) {
     _players = players;
   }
 
@@ -139,9 +177,17 @@ class StatisticsProvider extends ChangeNotifier {
     _serverName = serverName;
   }
 
+  void platform(int index) {
+    _platform[index] += 1;
+  }
+
+  List<int> get platformList => _platform;
   List<int> get playedMinList => list;
-  Map<String, int> get players => _players;
+  Map<String, int> get playersMin => _players;
+  Map<String, String> get playersPl => _playersPl;
+  Map<DateTime, int> get timeData => _timeData;
   DateTime get startTime => _startTime;
+  DateTime get graphTime => _graphTime;
   int get countJoined => _countJoined;
   String get serverName => _serverName;
 }
