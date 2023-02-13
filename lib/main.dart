@@ -103,15 +103,38 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Row(children: <Widget>[
-        NavRail(),
-        MainField(),
-      ]),
-    );
+        body: Column(
+      children: [
+        TitleBar(),
+        Expanded(
+          child: Row(children: <Widget>[
+            NavRail(),
+            MainField(),
+          ]),
+        )
+      ],
+    ));
   }
+}
+
+Widget TitleBar() {
+  return Container(
+      decoration: const BoxDecoration(
+        color: Colors.blue
+      ),
+      child: WindowTitleBarBox(
+        child: Row(
+          children: [Expanded(child: MoveWindow()), WindowButtons()],
+        ),
+      ));
+}
+
+Widget WindowButtons() {
+  return Row(children: [
+    MinimizeWindowButton(),
+    MaximizeWindowButton(),
+    CloseWindowButton()
+  ]);
 }
 
 class MainField extends StatelessWidget {
