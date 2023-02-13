@@ -5,7 +5,6 @@ import 'package:portal_playercount/pages/statistics.dart';
 import 'package:portal_playercount/pages/home.dart';
 import 'package:provider/provider.dart';
 import 'package:bitsdojo_window/bitsdojo_window.dart';
-import 'package:system_tray/system_tray.dart';
 
 void main() {
   runApp(
