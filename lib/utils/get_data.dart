@@ -113,15 +113,14 @@ Future<void> updateStatistics(BuildContext context) async {
     }
   });
   DateTime baseTime = statisticsProvider.graphTime;
-  if (now.difference(baseTime).inMinutes < 20) {
+  if (statisticsProvider.graphCount < 5) {
     statisticsProvider.addTimeData(baseTime, count);
-    print(
-        "${now.difference(baseTime).inMinutes},${statisticsProvider.graphTime}");
+    statisticsProvider.addCount();
   } else {
     statisticsProvider.addTimeData(now, count);
     statisticsProvider.graphTime = now;
-    print(
-        "else:${now.difference(baseTime).inMinutes},${statisticsProvider.graphTime}");
+    statisticsProvider.resetCount();
+    statisticsProvider.addCount();
   }
   statisticsProvider.addCountJoined = count;
   prevMin.forEach((key, value) {
@@ -136,6 +135,7 @@ Future<void> updateStatistics(BuildContext context) async {
 class StatisticsProvider extends ChangeNotifier {
   DateTime _startTime = DateTime(0, 0, 0, 0, 0);
   DateTime _graphTime = DateTime(0, 0, 0, 0, 0);
+  int _graphCount = 0;
   Map<String, int> _players = {};
   Map<String, String> _playersPl = {};
   List<int> list = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -150,6 +150,14 @@ class StatisticsProvider extends ChangeNotifier {
 
   void addTimeData(DateTime time, int count) {
     _timeData[time] = (_timeData[time] == null ? 0 : _timeData[time]!) + count;
+  }
+
+  void addCount() {
+    _graphCount += 1;
+  }
+
+  void resetCount() {
+    _graphCount = 0;
   }
 
   set playersPl(Map<String, String> playersPl) {
@@ -190,4 +198,5 @@ class StatisticsProvider extends ChangeNotifier {
   DateTime get graphTime => _graphTime;
   int get countJoined => _countJoined;
   String get serverName => _serverName;
+  int get graphCount => _graphCount;
 }

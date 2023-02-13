@@ -4,6 +4,8 @@ import 'package:portal_playercount/utils/get_data.dart';
 import 'package:portal_playercount/utils/indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:fl_chart/fl_chart.dart';
+import 'dart:math' as math;
+import 'package:syncfusion_flutter_charts/charts.dart';
 
 class StatisticsPage extends StatefulWidget {
   @override
@@ -125,6 +127,7 @@ class _StatisticsPageState extends State<StatisticsPage> {
                   child: Row(
                 children: [
                   Expanded(child: joindTimeGraph(timeData)),
+                  /** timeData,createDammyData(100) */
                   Expanded(child: elapsedMinutesGraph(playedMinList))
                 ],
               )),
@@ -136,13 +139,51 @@ class _StatisticsPageState extends State<StatisticsPage> {
   }
 
   Widget joindTimeGraph(Map<DateTime, int> timeData) {
+    timeData.remove(DateTime(0, 0, 0, 0, 0));
     if (timeData == {}) {
-      return Center(child: Text("placeholder"));
+      return const Center(child: Text("timeDataGraph"));
     } else {
-      return Center(
-        child: Text(timeData.entries.toString()),
+      return Column(
+        children: [
+          const Padding(
+            padding: EdgeInsets.all(10),
+            child: Align(
+              alignment: Alignment.center,
+              child: Text("Number of participants per time",
+                  style: TextStyle(fontSize: 20)),
+            ),
+          ),
+          Expanded(
+              child: Padding(
+                  padding: const EdgeInsets.only(right: 10),
+                  child: Center(
+                      child: SfCartesianChart(
+                    legend: Legend(
+                        isVisible: true, position: LegendPosition.bottom),
+                    primaryXAxis: DateTimeAxis(),
+                    series: <SplineSeries<ChartData, DateTime>>[
+                      timeDataLineSeries(timeData)
+                    ],
+                    tooltipBehavior: TooltipBehavior(enable: true),
+                  ))))
+        ],
       );
     }
+  }
+
+  SplineSeries<ChartData, DateTime> timeDataLineSeries(
+      Map<DateTime, int> timeData) {
+    List<ChartData> dataSource = [];
+    timeData.forEach((key, value) {
+      dataSource.add(ChartData(key, value));
+    });
+
+    return SplineSeries<ChartData, DateTime>(
+        dataSource: dataSource,
+        xValueMapper: (ChartData data, _) => data.x,
+        yValueMapper: (ChartData data, _) => data.y,
+        markerSettings: const MarkerSettings(isVisible: false),
+        name: "players");
   }
 
   Widget platformList(List<int> platform) {
@@ -278,4 +319,10 @@ class _StatisticsPageState extends State<StatisticsPage> {
     }
     return indicators;
   }
+}
+
+class ChartData {
+  ChartData(this.x, this.y);
+  final DateTime x;
+  final int y;
 }
